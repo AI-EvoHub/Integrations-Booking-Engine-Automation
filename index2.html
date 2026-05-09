@@ -1,0 +1,789 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Inter',sans-serif;background:#07070F;color:#E2E2F0;font-size:13px;height:100vh;overflow:hidden}
+:root{
+  --bg:#07070F;--bg1:#0C0C18;--bg2:#121220;--bg3:#1A1A2E;--bg4:#22223A;
+  --b:rgba(255,255,255,.05);--b2:rgba(255,255,255,.09);--b3:rgba(255,255,255,.16);
+  --t:#E2E2F0;--t2:#7878A0;--t3:#3A3A5C;--t4:#B0B0D0;
+  --ac:#6366F1;--ac2:#818CF8;--ac3:rgba(99,102,241,.12);
+  --gr:#10B981;--gr2:#34D399;--gr3:rgba(16,185,129,.1);
+  --am:#F59E0B;--am2:rgba(245,158,11,.1);
+  --rd:#EF4444;--rd2:rgba(239,68,68,.1);
+  --pu:#A855F7;--pu2:rgba(168,85,247,.1);
+  --cy:#06B6D4;--cy2:rgba(6,182,212,.1)
+}
+.app{height:100vh;display:flex;flex-direction:column}
+/* TOP BAR */
+.topbar{height:48px;background:var(--bg1);border-bottom:1px solid var(--b2);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0}
+.logo{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.logo-mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#6366F1,#8B5CF6);display:flex;align-items:center;justify-content:center;font-size:14px}
+.logo-text{font-size:14px;font-weight:600;background:linear-gradient(90deg,#fff,#A5B4FC);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.phase-tag{font-size:11px;padding:3px 9px;background:var(--am2);border:1px solid rgba(245,158,11,.2);border-radius:20px;color:var(--am);font-weight:600}
+.tdiv{width:1px;height:20px;background:var(--b2)}
+.tnav-row{display:flex;gap:2px}
+.tnav{display:flex;align-items:center;gap:5px;padding:5px 11px;font-size:12px;font-weight:500;border:1px solid transparent;border-radius:7px;background:none;cursor:pointer;color:var(--t2);transition:all .12s;white-space:nowrap}
+.tnav:hover{color:var(--t);background:var(--bg2)}
+.tnav.on{background:var(--bg3);border-color:var(--b2);color:var(--t)}
+.top-r{margin-left:auto;display:flex;align-items:center;gap:8px}
+.blv{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:3px 9px;background:var(--gr3);border:1px solid rgba(16,185,129,.2);border-radius:20px;color:var(--gr)}
+.ld{width:5px;height:5px;border-radius:50%;background:var(--gr);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+/* SECTIONS */
+.sec{display:none;flex:1;overflow:hidden}
+.sec.on{display:flex}
+/* SHARED */
+.panel-scroll{overflow-y:auto;flex:1}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+.page{padding:20px;display:flex;flex-direction:column;gap:16px}
+.page-h{font-size:17px;font-weight:600}
+.page-sub{font-size:12px;color:var(--t2);margin-top:3px;line-height:1.5}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.card{background:var(--bg2);border:1px solid var(--b);border-radius:12px;overflow:hidden}
+.card-h{padding:11px 14px;border-bottom:1px solid var(--b);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card-b{padding:14px}
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:2px 9px;border-radius:20px}
+.b-gr{background:var(--gr3);color:var(--gr);border:1px solid rgba(16,185,129,.18)}
+.b-am{background:var(--am2);color:var(--am);border:1px solid rgba(245,158,11,.18)}
+.b-rd{background:var(--rd2);color:var(--rd);border:1px solid rgba(239,68,68,.18)}
+.b-ac{background:var(--ac3);color:var(--ac2);border:1px solid rgba(99,102,241,.18)}
+.b-cy{background:var(--cy2);color:var(--cy);border:1px solid rgba(6,182,212,.18)}
+.b-pu{background:var(--pu2);color:var(--pu);border:1px solid rgba(168,85,247,.18)}
+/* Form fields */
+.fld label{font-size:10px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px}
+.fld input,.fld select,.fld textarea{width:100%;background:var(--bg);border:1px solid var(--b2);border-radius:8px;padding:7px 10px;font-size:12.5px;color:var(--t);outline:none;font-family:inherit;transition:border-color .12s}
+.fld input:focus,.fld select:focus{border-color:var(--ac)}
+.fld select option{background:var(--bg2)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.frow.full{grid-template-columns:1fr}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border:none;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .12s;white-space:nowrap}
+.btn-ac{background:var(--ac);color:white}.btn-ac:hover{background:var(--ac2)}
+.btn-gr{background:var(--gr);color:white}.btn-gr:hover{filter:brightness(1.1)}
+.btn-ghost{background:none;border:1px solid var(--b2);color:var(--t2)}.btn-ghost:hover{background:var(--bg3);color:var(--t)}
+.btn-rd{background:var(--rd2);border:1px solid rgba(239,68,68,.2);color:var(--rd)}.btn-rd:hover{background:rgba(239,68,68,.2)}
+.btn-sm{padding:4px 11px;font-size:11px;border-radius:6px}
+/* Toggle */
+.tog{display:flex;align-items:center;gap:7px;cursor:pointer}
+.tog-t{width:32px;height:17px;border-radius:9px;background:var(--b2);position:relative;transition:background .15s;flex-shrink:0}
+.tog-t.on{background:var(--ac)}
+.tog-t::after{content:'';width:12px;height:12px;border-radius:50%;background:white;position:absolute;top:2.5px;left:2.5px;transition:left .15s}
+.tog-t.on::after{left:17.5px}
+.tog-l{font-size:12px;color:var(--t2)}
+/* Status dot */
+.sdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sdot-gr{background:var(--gr);box-shadow:0 0 6px var(--gr)}
+.sdot-am{background:var(--am)}
+.sdot-rd{background:var(--rd)}
+.sdot-off{background:var(--t3)}
+/* Save indicator */
+.save-row{display:flex;align-items:center;gap:10px;margin-top:14px}
+.save-ok{font-size:11px;color:var(--gr);opacity:0;transition:opacity .3s}
+.save-ok.on{opacity:1}
+
+/* ═══ INTEGRATIONS ═══ */
+.int-card{background:var(--bg2);border:1px solid var(--b);border-radius:12px;padding:0;overflow:hidden;transition:border-color .15s}
+.int-card:hover{border-color:var(--b3)}
+.int-hdr{padding:14px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--b)}
+.int-logo{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.int-name{font-size:13px;font-weight:600}
+.int-cat{font-size:11px;color:var(--t2)}
+.int-body{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.int-row{display:flex;align-items:center;justify-content:space-between;font-size:12px}
+.int-lbl{color:var(--t2)}.int-val{color:var(--t);font-weight:500;font-family:monospace;font-size:11.5px}
+.webhook-box{background:var(--bg);border:1px solid var(--b2);border-radius:7px;padding:8px 11px;font-family:monospace;font-size:11px;color:var(--ac2);word-break:break-all;line-height:1.5}
+.copy-mini{font-size:10px;padding:2px 8px;background:var(--bg2);border:1px solid var(--b2);border-radius:5px;color:var(--t2);cursor:pointer;margin-left:6px;flex-shrink:0}
+.copy-mini:hover{color:var(--t)}
+.step-list{display:flex;flex-direction:column;gap:7px}
+.step{display:flex;align-items:flex-start;gap:9px;padding:8px 10px;background:var(--bg);border-radius:8px;border:1px solid var(--b)}
+.step-num{width:20px;height:20px;border-radius:50%;background:var(--ac3);border:1px solid rgba(99,102,241,.2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--ac2);flex-shrink:0}
+.step-num.done{background:var(--gr3);border-color:rgba(16,185,129,.2);color:var(--gr)}
+.step-t{font-size:12px;font-weight:500}
+.step-s{font-size:11px;color:var(--t2);margin-top:1px}
+.api-field{display:flex;gap:6px;align-items:center}
+.api-inp{flex:1;background:var(--bg);border:1px solid var(--b2);border-radius:7px;padding:6px 10px;font-size:12px;color:var(--t);outline:none;font-family:monospace}
+.api-inp:focus{border-color:var(--ac)}
+.api-inp::placeholder{color:var(--t3)}
+.conn-btn{padding:6px 14px;border-radius:7px;border:none;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .12s}
+.conn-btn.connect{background:var(--ac);color:white}
+.conn-btn.connected{background:var(--gr3);border:1px solid rgba(16,185,129,.2);color:var(--gr)}
+.conn-btn.connect:hover{background:var(--ac2)}
+
+/* ═══ BOOKING ENGINE ═══ */
+.booking-layout{display:flex;height:100%;overflow:hidden}
+.book-list{width:320px;flex-shrink:0;border-right:1px solid var(--b);display:flex;flex-direction:column;background:var(--bg1);overflow:hidden}
+.book-list-top{padding:12px;border-bottom:1px solid var(--b);flex-shrink:0}
+.book-list-scroll{flex:1;overflow-y:auto}
+.book-item{padding:11px 14px;border-bottom:1px solid var(--b);cursor:pointer;transition:background .1s}
+.book-item:hover{background:var(--bg2)}
+.book-item.on{background:var(--bg3);border-right:2px solid var(--ac)}
+.bi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.bi-name{font-size:12.5px;font-weight:600}
+.bi-prop{font-size:11.5px;color:var(--t2);margin-bottom:3px}
+.bi-row{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--t2)}
+.bi-price{font-weight:600;color:var(--t)}
+.book-detail{flex:1;overflow-y:auto;padding:20px;background:var(--bg)}
+.bd-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.bd-acts{display:flex;gap:6px;flex-wrap:wrap}
+.bd-section{margin-bottom:18px}
+.bd-lbl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dg-item{background:var(--bg2);border:1px solid var(--b);border-radius:8px;padding:9px 11px}
+.dg-lbl{font-size:10px;color:var(--t2);margin-bottom:3px}
+.dg-val{font-size:13px;font-weight:600}
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:12px;padding-bottom:14px;position:relative}
+.tl-item:last-child{padding-bottom:0}
+.tl-item::before{content:'';position:absolute;left:11px;top:22px;bottom:0;width:1px;background:var(--b2)}
+.tl-item:last-child::before{display:none}
+.tl-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;z-index:1}
+.tl-content{flex:1;padding-top:2px}
+.tl-title{font-size:12px;font-weight:600}
+.tl-sub{font-size:11px;color:var(--t2);margin-top:1px}
+.tl-time{font-size:10px;color:var(--t3);margin-top:3px}
+.msg-preview{background:var(--bg2);border:1px solid var(--b);border-radius:9px;padding:11px;font-size:12px;line-height:1.6;color:var(--t4)}
+.channel-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:2px 7px;border-radius:10px;margin-bottom:6px;font-weight:500}
+
+/* ═══ AUTOMATION ═══ */
+.auto-layout{display:flex;height:100%;overflow:hidden}
+.flow-list{width:260px;flex-shrink:0;border-right:1px solid var(--b);background:var(--bg1);display:flex;flex-direction:column;overflow:hidden}
+.flow-list-h{padding:12px;font-size:13px;font-weight:600;border-bottom:1px solid var(--b);flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+.flow-list-scroll{flex:1;overflow-y:auto}
+.flow-item{padding:10px 13px;border-bottom:1px solid var(--b);cursor:pointer;transition:background .1s}
+.flow-item:hover{background:var(--bg2)}
+.flow-item.on{background:var(--bg3);border-right:2px solid var(--ac)}
+.fi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+.fi-name{font-size:12.5px;font-weight:500}
+.fi-sub{font-size:11px;color:var(--t2)}
+.flow-detail{flex:1;overflow-y:auto;padding:20px;background:var(--bg);display:flex;flex-direction:column;gap:14px}
+/* Flow builder */
+.flow-node{background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:12px 14px;position:relative}
+.fn-type{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.fn-title{font-size:13px;font-weight:600;margin-bottom:4px}
+.fn-desc{font-size:11.5px;color:var(--t2);line-height:1.5}
+.fn-arrow{text-align:center;color:var(--t3);font-size:18px;margin:2px 0}
+.fn-edit-area{margin-top:10px;background:var(--bg);border:1px solid var(--b2);border-radius:7px;padding:10px;font-size:12px;color:var(--t4);line-height:1.6;min-height:52px;outline:none;cursor:text}
+.fn-edit-area:focus{border-color:var(--ac)}
+.fn-meta{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.fn-tag{font-size:10px;padding:2px 7px;border-radius:6px;font-weight:500}
+.fn-trigger{background:var(--am2);color:var(--am);border:1px solid rgba(245,158,11,.15)}
+.fn-action{background:var(--ac3);color:var(--ac2);border:1px solid rgba(99,102,241,.15)}
+.fn-condition{background:var(--pu2);color:var(--pu);border:1px solid rgba(168,85,247,.15)}
+.fn-delay{background:var(--cy2);color:var(--cy);border:1px solid rgba(6,182,212,.15)}
+.ch-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:3px}
+/* Stats mini */
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat-mini{background:var(--bg2);border:1px solid var(--b);border-radius:8px;padding:9px 11px;text-align:center}
+.sm-val{font-size:18px;font-weight:600}
+.sm-lbl{font-size:10px;color:var(--t2);margin-top:1px}
+
+/* ═══ VOICE ═══ */
+.voice-layout{display:flex;height:100%;overflow:hidden}
+.call-list{width:300px;flex-shrink:0;border-right:1px solid var(--b);display:flex;flex-direction:column;background:var(--bg1);overflow:hidden}
+.call-list-top{padding:12px;border-bottom:1px solid var(--b);flex-shrink:0}
+.call-list-scroll{flex:1;overflow-y:auto}
+.call-item{padding:11px 14px;border-bottom:1px solid var(--b);cursor:pointer;transition:background .1s}
+.call-item:hover{background:var(--bg2)}
+.call-item.on{background:var(--bg3);border-right:2px solid var(--am)}
+.ci-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+.ci-name{font-size:12.5px;font-weight:500}
+.ci-dur{font-size:11px;color:var(--t2)}
+.ci-outcome{font-size:11px;margin-bottom:3px}
+.ci-time{font-size:10.5px;color:var(--t3)}
+.call-detail{flex:1;overflow-y:auto;padding:20px;background:var(--bg);display:flex;flex-direction:column;gap:14px}
+.transcript{background:var(--bg2);border:1px solid var(--b);border-radius:10px;overflow:hidden}
+.tr-hdr{padding:9px 13px;font-size:12px;font-weight:600;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:6px}
+.tr-body{padding:12px;display:flex;flex-direction:column;gap:9px;max-height:260px;overflow-y:auto}
+.tr-line{display:flex;gap:9px;align-items:flex-start}
+.tr-spk{font-size:10px;font-weight:700;min-width:44px;padding-top:2px;flex-shrink:0}
+.tr-guest{color:var(--t2)}.tr-ai{color:var(--ac2)}
+.tr-txt{font-size:12px;line-height:1.5;color:var(--t4)}
+.tr-ts{font-size:10px;color:var(--t3);margin-left:auto;flex-shrink:0;padding-top:2px}
+.waveform{display:flex;align-items:center;gap:2px;height:32px;padding:0 2px}
+.wf-bar{width:3px;border-radius:2px;background:var(--am);opacity:.7}
+.vapi-setup{background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:14px}
+</style>
+
+<div class="app">
+<div class="topbar">
+  <div class="logo"><div class="logo-mark">🏖️</div><span class="logo-text">RealCentral AI</span></div>
+  <span class="phase-tag">Phase 2</span>
+  <div class="tdiv"></div>
+  <div class="tnav-row">
+    <button class="tnav on" onclick="sw('int',this)">🔌 Integrations</button>
+    <button class="tnav" onclick="sw('book',this)">📅 Booking engine</button>
+    <button class="tnav" onclick="sw('auto',this)">⚡ Automation flows</button>
+    <button class="tnav" onclick="sw('voice',this)">📞 Voice AI (VAPI)</button>
+  </div>
+  <div class="top-r">
+    <span class="blv"><span class="ld"></span>2 channels live</span>
+    <span style="font-size:11px;color:var(--t2)">Phase 2 — in progress</span>
+  </div>
+</div>
+
+<!-- ═════════════════════ INTEGRATIONS ═════════════════════ -->
+<div class="sec on" id="sec-int">
+<div class="panel-scroll">
+<div class="page">
+  <div>
+    <div class="page-h">Integration hub</div>
+    <div class="page-sub">Connect your channels, PMS, and tools. Each integration feeds data into the AI and unified inbox automatically.</div>
+  </div>
+
+  <!-- Status overview -->
+  <div class="grid3">
+    <div style="background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px">
+      <div class="sdot sdot-gr"></div><div><div style="font-size:12.5px;font-weight:600">WhatsApp</div><div style="font-size:11px;color:var(--t2)">Twilio · Connected</div></div><span class="badge b-gr" style="margin-left:auto">Live</span>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px">
+      <div class="sdot sdot-gr"></div><div><div style="font-size:12.5px;font-weight:600">SMS</div><div style="font-size:11px;color:var(--t2)">Twilio · Connected</div></div><span class="badge b-gr" style="margin-left:auto">Live</span>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px">
+      <div class="sdot sdot-am"></div><div><div style="font-size:12.5px;font-weight:600">Voice AI</div><div style="font-size:11px;color:var(--t2)">VAPI · Setup required</div></div><span class="badge b-am" style="margin-left:auto">Pending</span>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px">
+      <div class="sdot sdot-am"></div><div><div style="font-size:12.5px;font-weight:600">Guesty PMS</div><div style="font-size:11px;color:var(--t2)">API key required</div></div><span class="badge b-am" style="margin-left:auto">Pending</span>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px">
+      <div class="sdot sdot-off"></div><div><div style="font-size:12.5px;font-weight:600">Hostaway</div><div style="font-size:11px;color:var(--t2)">Not connected</div></div><span class="badge" style="background:var(--bg3);color:var(--t3);border:1px solid var(--b2);margin-left:auto">Off</span>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px">
+      <div class="sdot sdot-off"></div><div><div style="font-size:12.5px;font-weight:600">Stripe</div><div style="font-size:11px;color:var(--t2)">Payments</div></div><span class="badge" style="background:var(--bg3);color:var(--t3);border:1px solid var(--b2);margin-left:auto">Off</span>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <!-- TWILIO -->
+    <div class="int-card">
+      <div class="int-hdr">
+        <div class="int-logo" style="background:rgba(245,63,63,.1);color:#F53F3F;font-size:22px">📡</div>
+        <div><div class="int-name">Twilio</div><div class="int-cat">WhatsApp · SMS · Voice</div></div>
+        <span class="badge b-gr" style="margin-left:auto">Connected</span>
+      </div>
+      <div class="int-body">
+        <div class="int-row"><span class="int-lbl">Account SID</span><span class="int-val">AC8f2e...demo</span></div>
+        <div class="int-row"><span class="int-lbl">Phone number</span><span class="int-val">+1 (786) 555-0142</span></div>
+        <div style="font-size:11px;font-weight:600;color:var(--t2);margin-bottom:4px">Webhook URLs — paste into Twilio console</div>
+        <div>
+          <div style="font-size:10px;color:var(--t3);margin-bottom:3px">WhatsApp incoming</div>
+          <div style="display:flex;align-items:center;gap:6px"><div class="webhook-box" style="flex:1">https://api.realcentral.ai/wh/whatsapp</div><button class="copy-mini" onclick="copyText('https://api.realcentral.ai/wh/whatsapp',this)">Copy</button></div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--t3);margin-bottom:3px">SMS incoming</div>
+          <div style="display:flex;align-items:center;gap:6px"><div class="webhook-box" style="flex:1">https://api.realcentral.ai/wh/sms</div><button class="copy-mini" onclick="copyText('https://api.realcentral.ai/wh/sms',this)">Copy</button></div>
+        </div>
+        <div class="step-list">
+          <div class="step"><div class="step-num done">✓</div><div><div class="step-t">Twilio account created</div><div class="step-s">Account SID + Auth Token saved</div></div></div>
+          <div class="step"><div class="step-num done">✓</div><div><div class="step-t">Phone number purchased</div><div class="step-s">+1 (786) 555-0142 — WhatsApp + SMS enabled</div></div></div>
+          <div class="step"><div class="step-num done">✓</div><div><div class="step-t">Webhooks configured</div><div class="step-s">Incoming messages routed to RealCentral inbox</div></div></div>
+          <div class="step"><div class="step-num done">✓</div><div><div class="step-t">WhatsApp Business approved</div><div class="step-s">Profile live · Display name: Azure Villas</div></div></div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost btn-sm">⚙️ Edit config</button>
+          <button class="btn btn-ghost btn-sm">📊 View logs</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GUESTY -->
+    <div class="int-card">
+      <div class="int-hdr">
+        <div class="int-logo" style="background:rgba(99,102,241,.1);font-size:22px">🏨</div>
+        <div><div class="int-name">Guesty PMS</div><div class="int-cat">Property management · Calendar sync</div></div>
+        <span class="badge b-am">Pending</span>
+      </div>
+      <div class="int-body">
+        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-bottom:8px">Connect Guesty so the AI checks live availability, pulls guest data, and syncs bookings automatically — before confirming anything to a guest.</div>
+        <div style="margin-bottom:10px">
+          <div style="font-size:10px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Guesty API key</div>
+          <div class="api-field">
+            <input class="api-inp" id="guesty-key" placeholder="gst_live_..." type="password">
+            <button class="conn-btn connect" id="guesty-btn" onclick="connectPMS('guesty')">Connect</button>
+          </div>
+        </div>
+        <div style="font-size:11px;font-weight:600;color:var(--t2);margin-bottom:6px">Once connected, AI will:</div>
+        <div class="step-list">
+          <div class="step"><div class="step-num">1</div><div><div class="step-t">Check live calendar before confirming dates</div></div></div>
+          <div class="step"><div class="step-num">2</div><div><div class="step-t">Pull guest name, email & booking history</div></div></div>
+          <div class="step"><div class="step-num">3</div><div><div class="step-t">Auto-create reservations from AI conversations</div></div></div>
+          <div class="step"><div class="step-num">4</div><div><div class="step-t">Sync cancellations & modifications both ways</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VAPI -->
+    <div class="int-card">
+      <div class="int-hdr">
+        <div class="int-logo" style="background:rgba(245,158,11,.1);font-size:22px">🎙️</div>
+        <div><div class="int-name">VAPI Voice AI</div><div class="int-cat">Inbound phone calls · 24/7</div></div>
+        <span class="badge b-am">Pending</span>
+      </div>
+      <div class="int-body">
+        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-bottom:8px">VAPI handles inbound phone calls with a natural-sounding AI voice. Calls are transcribed, logged, and escalated to staff if needed.</div>
+        <div style="margin-bottom:10px">
+          <div style="font-size:10px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">VAPI API key</div>
+          <div class="api-field">
+            <input class="api-inp" id="vapi-key" placeholder="vapi_..." type="password">
+            <button class="conn-btn connect" id="vapi-btn" onclick="connectVAPI()">Connect</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div style="flex:1;background:var(--bg);border:1px solid var(--b);border-radius:8px;padding:9px;text-align:center"><div style="font-size:18px;font-weight:600;color:var(--am)">< 1s</div><div style="font-size:10px;color:var(--t2)">AI answer time</div></div>
+          <div style="flex:1;background:var(--bg);border:1px solid var(--b);border-radius:8px;padding:9px;text-align:center"><div style="font-size:18px;font-weight:600;color:var(--am)">95%</div><div style="font-size:10px;color:var(--t2)">Calls resolved</div></div>
+          <div style="flex:1;background:var(--bg);border:1px solid var(--b);border-radius:8px;padding:9px;text-align:center"><div style="font-size:18px;font-weight:600;color:var(--am)">24/7</div><div style="font-size:10px;color:var(--t2)">Coverage</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STRIPE -->
+    <div class="int-card">
+      <div class="int-hdr">
+        <div class="int-logo" style="background:rgba(99,102,241,.08);font-size:22px">💳</div>
+        <div><div class="int-name">Stripe</div><div class="int-cat">Payment processing · Deposits</div></div>
+        <span class="badge" style="background:var(--bg3);color:var(--t3);border:1px solid var(--b2)">Not connected</span>
+      </div>
+      <div class="int-body">
+        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-bottom:8px">AI sends guests a secure Stripe payment link directly in chat. Deposit collected, booking confirmed — no staff needed.</div>
+        <div style="margin-bottom:10px">
+          <div style="font-size:10px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Stripe secret key</div>
+          <div class="api-field">
+            <input class="api-inp" placeholder="sk_live_..." type="password">
+            <button class="conn-btn connect" onclick="connectStripe(this)">Connect</button>
+          </div>
+        </div>
+        <div style="font-size:11px;font-weight:600;color:var(--t2);margin-bottom:6px">Flow: AI booking → Stripe link → Guest pays → Auto-confirmed</div>
+        <div>
+          <div style="font-size:10px;color:var(--t3);margin-bottom:3px">Payment webhook</div>
+          <div style="display:flex;align-items:center;gap:6px"><div class="webhook-box" style="flex:1">https://api.realcentral.ai/wh/stripe</div><button class="copy-mini" onclick="copyText('https://api.realcentral.ai/wh/stripe',this)">Copy</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ═════════════════════ BOOKING ENGINE ═════════════════════ -->
+<div class="sec" id="sec-book">
+<div class="booking-layout">
+  <div class="book-list">
+    <div class="book-list-top">
+      <div style="font-size:14px;font-weight:600;margin-bottom:8px">Bookings <span style="font-size:11px;font-weight:400;color:var(--t2)">(6 total)</span></div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-sm on" style="font-size:10px" onclick="filterBook('all',this)">All</button>
+        <button class="btn btn-ghost btn-sm" style="font-size:10px" onclick="filterBook('inquiry',this)">Inquiry</button>
+        <button class="btn btn-ghost btn-sm" style="font-size:10px" onclick="filterBook('confirmed',this)">Confirmed</button>
+        <button class="btn btn-ghost btn-sm" style="font-size:10px" onclick="filterBook('active',this)">Active</button>
+      </div>
+    </div>
+    <div class="book-list-scroll" id="book-list"></div>
+  </div>
+  <div class="book-detail" id="book-detail">
+    <div style="display:flex;align-items:center;justify-content:center;flex:1;color:var(--t3);flex-direction:column;gap:10px">
+      <div style="font-size:28px">📅</div><div>Select a booking to view details</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═════════════════════ AUTOMATION ═════════════════════ -->
+<div class="sec" id="sec-auto">
+<div class="auto-layout">
+  <div class="flow-list">
+    <div class="flow-list-h">Automation flows <button class="btn btn-ac btn-sm" style="font-size:10px">+ New</button></div>
+    <div class="flow-list-scroll" id="flow-list"></div>
+  </div>
+  <div class="flow-detail" id="flow-detail">
+    <div style="display:flex;align-items:center;justify-content:center;flex:1;color:var(--t3);flex-direction:column;gap:10px">
+      <div style="font-size:28px">⚡</div><div>Select a flow to edit</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═════════════════════ VOICE ═════════════════════ -->
+<div class="sec" id="sec-voice">
+<div class="voice-layout">
+  <div class="call-list">
+    <div class="call-list-top">
+      <div style="font-size:14px;font-weight:600;margin-bottom:4px">Call log</div>
+      <div style="font-size:11px;color:var(--t2)">AI answered · Last 7 days</div>
+    </div>
+    <div class="call-list-scroll" id="call-list"></div>
+  </div>
+  <div class="call-detail" id="call-detail">
+    <div style="display:flex;align-items:center;justify-content:center;flex:1;color:var(--t3);flex-direction:column;gap:10px">
+      <div style="font-size:28px">📞</div><div>Select a call to view transcript</div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+
+<script>
+function sw(name,el){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.getElementById('sec-'+name).classList.add('on');
+  document.querySelectorAll('.tnav').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+}
+function copyText(t,btn){navigator.clipboard.writeText(t).then(()=>{btn.textContent='✓';setTimeout(()=>btn.textContent='Copy',1800);});}
+function showOk(id){const e=document.getElementById(id);if(!e)return;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2500);}
+
+function connectPMS(which){
+  const key=document.getElementById(which+'-key').value.trim();
+  const btn=document.getElementById(which+'-btn');
+  if(!key){document.getElementById(which+'-key').style.borderColor='var(--rd)';return;}
+  btn.textContent='Connecting...';btn.disabled=true;btn.classList.remove('connect');
+  setTimeout(()=>{btn.textContent='✓ Connected';btn.classList.add('connected');btn.disabled=false;},1400);
+}
+function connectVAPI(){
+  const key=document.getElementById('vapi-key').value.trim();
+  const btn=document.getElementById('vapi-btn');
+  btn.textContent='Connecting...';btn.disabled=true;
+  setTimeout(()=>{btn.textContent='✓ Connected';btn.classList.remove('connect');btn.classList.add('connected');btn.disabled=false;},1400);
+}
+function connectStripe(btn){
+  btn.textContent='Connecting...';btn.disabled=true;
+  setTimeout(()=>{btn.textContent='✓ Connected';btn.classList.remove('connect');btn.classList.add('connected');btn.disabled=false;},1400);
+}
+
+// ══ BOOKINGS ══
+const bookings=[
+  {id:'B-001',guest:'Sarah Mitchell',emoji:'👩',prop:'Villa Azul',ch:'wa',cin:'Jul 4',cout:'Jul 8',nights:4,guests:4,price:699,total:2796,deposit:1398,status:'inquiry',created:'Today 14:22',aiHandled:true,msgs:[
+    {ch:'wa',from:'guest',text:"Hi! I'd like to book Villa Azul July 4–8 for 4 guests. What's the total?",time:'14:22'},
+    {ch:'wa',from:'ai',text:"Great choice, Sarah! 🌟 Villa Azul (4BR beachfront, sleeps 10) July 4–8 is available! Total: $2,796 (4 nights × $699). A 50% deposit of $1,398 is due today to confirm. Shall I send you the secure payment link?",time:'14:22'},
+    {ch:'wa',from:'guest',text:'Yes please! Send it.',time:'14:24'}
+  ]},
+  {id:'B-002',guest:'Michael Chen',emoji:'🧑',prop:'The Penthouse',ch:'wa',cin:'Aug 1',cout:'Aug 7',nights:6,guests:3,price:499,total:2994,deposit:1497,status:'confirmed',created:'Today 13:52',aiHandled:true,msgs:[
+    {ch:'wa',from:'guest',text:'I want to book The Penthouse Aug 1–7, 3 guests.',time:'13:52'},
+    {ch:'wa',from:'ai',text:'The Penthouse (3BR city view) Aug 1–7 is available! Total: $2,994. Deposit of $1,497 due today. Sending booking link now 📲',time:'13:52'},
+    {ch:'wa',from:'guest',text:'Payment done!',time:'13:58'},
+    {ch:'wa',from:'ai',text:'Confirmed! 🎉 Booking #B-002 is locked in. Check-in Aug 1 at 3PM. You\'ll get check-in instructions 24hrs before. See you soon! 🌃',time:'13:58'}
+  ]},
+  {id:'B-003',guest:'James Rodriguez',emoji:'👨',prop:'Palm Suite',ch:'sms',cin:'Jul 12',cout:'Jul 15',nights:3,guests:2,price:349,total:1047,deposit:523.5,status:'confirmed',created:'Yesterday',aiHandled:true,msgs:[
+    {ch:'sms',from:'guest',text:'Can I book Palm Suite July 12-15 for 2?',time:'09:11'},
+    {ch:'sms',from:'ai',text:'Palm Suite Jul 12–15 available! $1,047 total. $523.50 deposit to confirm. Sending payment link now.',time:'09:11'}
+  ]},
+  {id:'B-004',guest:'Lisa Park',emoji:'👩‍💼',prop:'Villa Azul',ch:'wc',cin:'Jul 1',cout:'Jul 5',nights:4,guests:5,price:699,total:2796,deposit:1398,status:'active',created:'Jul 1',aiHandled:true,msgs:[
+    {ch:'wc',from:'guest',text:'Booked online for Jul 1-5.',time:'Jun 28'}
+  ]},
+  {id:'B-005',guest:'Tom Bradley',emoji:'👨‍🦳',prop:'Palm Suite',ch:'sms',cin:'Jul 20',cout:'Jul 24',nights:4,guests:2,price:349,total:1396,deposit:698,status:'confirmed',created:'3 days ago',aiHandled:true,msgs:[
+    {ch:'sms',from:'guest',text:'Palm Suite July 20-24 for 2 please.',time:'2d ago'},
+    {ch:'sms',from:'ai',text:'Booked! Palm Suite Jul 20–24. $1,396 total. Deposit received. Confirmation #B-005 sent to your email. 🏖️',time:'2d ago'}
+  ]},
+  {id:'B-006',guest:'Emma Thompson',emoji:'👩‍🦰',prop:'Villa Azul',ch:'wc',cin:'Aug 10',cout:'Aug 14',nights:4,guests:6,price:699,total:2796,deposit:0,status:'inquiry',created:'Today 14:09',aiHandled:true,msgs:[
+    {ch:'wc',from:'guest',text:'Do you allow pets? I have a small golden retriever.',time:'14:09'},
+    {ch:'wc',from:'ai',text:'Yes! Small dogs under 20lbs are welcome with a $75 pet fee. Your retriever sounds perfect. Do you have dates in mind? I can check availability right now.',time:'14:09'},
+    {ch:'wc',from:'guest',text:'August 10-14 for 6 guests.',time:'14:11'}
+  ]}
+];
+
+const statusStyle={inquiry:'b-am',confirmed:'b-gr',active:'b-cy'};
+const statusLabel={inquiry:'Inquiry',confirmed:'Confirmed',active:'Active stay'};
+const chIcon={wa:'💬',sms:'📱',wc:'🌐'};
+const chColors={wa:'#25D366',sms:'#30D158',wc:'#6366F1'};
+
+let activeBookId=null;
+
+function renderBookList(filter='all'){
+  const el=document.getElementById('book-list');
+  const list=filter==='all'?bookings:bookings.filter(b=>b.status===filter);
+  el.innerHTML=list.map(b=>`
+    <div class="book-item${b.id===activeBookId?' on':''}" onclick="openBook('${b.id}')">
+      <div class="bi-top"><span class="bi-name">${b.emoji} ${b.guest}</span><span class="badge ${statusStyle[b.status]}" style="font-size:10px">${statusLabel[b.status]}</span></div>
+      <div class="bi-prop">🏠 ${b.prop} · ${b.ch.toUpperCase()}</div>
+      <div class="bi-row"><span>${b.cin} – ${b.cout} · ${b.guests} guests</span><span class="bi-price">$${b.total.toLocaleString()}</span></div>
+    </div>`).join('');
+}
+
+function openBook(id){
+  activeBookId=id;
+  const b=bookings.find(x=>x.id===id);
+  renderBookList();
+  const el=document.getElementById('book-detail');
+  const payPct=b.deposit>0?Math.round(b.deposit/b.total*100):0;
+  const msgsHtml=b.msgs.map(m=>`
+    <div style="margin-bottom:8px">
+      <div class="channel-badge" style="background:${chColors[m.ch]}18;color:${chColors[m.ch]};border:1px solid ${chColors[m.ch]}33">${chIcon[m.ch]} ${m.ch.toUpperCase()} · ${m.from==='ai'?'Maya AI':'Guest'} · ${m.time}</div>
+      <div class="msg-preview">${m.text}</div>
+    </div>`).join('');
+
+  el.innerHTML=`
+    <div class="bd-hdr">
+      <div>
+        <div style="font-size:18px;font-weight:700;margin-bottom:4px">${b.emoji} ${b.guest}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="badge ${statusStyle[b.status]}">${statusLabel[b.status]}</span>
+          <span style="font-size:11px;color:var(--t2)">${b.id} · Created ${b.created}</span>
+          ${b.aiHandled?'<span class="badge b-ac">🤖 AI handled</span>':''}
+        </div>
+      </div>
+      <div class="bd-acts">
+        ${b.status==='inquiry'?`<button class="btn btn-gr btn-sm" onclick="confirmBook('${b.id}')">✓ Confirm booking</button>`:''}
+        <button class="btn btn-ghost btn-sm">📧 Send message</button>
+        <button class="btn btn-ghost btn-sm">🖨 View invoice</button>
+      </div>
+    </div>
+
+    <div class="bd-section">
+      <div class="bd-lbl">Booking details</div>
+      <div class="detail-grid">
+        <div class="dg-item"><div class="dg-lbl">Property</div><div class="dg-val">🏠 ${b.prop}</div></div>
+        <div class="dg-item"><div class="dg-lbl">Channel</div><div class="dg-val">${chIcon[b.ch]} ${b.ch.toUpperCase()}</div></div>
+        <div class="dg-item"><div class="dg-lbl">Check-in</div><div class="dg-val">${b.cin} · 3:00 PM</div></div>
+        <div class="dg-item"><div class="dg-lbl">Check-out</div><div class="dg-val">${b.cout} · 11:00 AM</div></div>
+        <div class="dg-item"><div class="dg-lbl">Guests</div><div class="dg-val">${b.guests} guests · ${b.nights} nights</div></div>
+        <div class="dg-item"><div class="dg-lbl">Rate / night</div><div class="dg-val">$${b.price.toLocaleString()}</div></div>
+      </div>
+    </div>
+
+    <div class="bd-section">
+      <div class="bd-lbl">Payment</div>
+      <div class="detail-grid">
+        <div class="dg-item"><div class="dg-lbl">Total</div><div class="dg-val" style="color:var(--gr)">$${b.total.toLocaleString()}</div></div>
+        <div class="dg-item"><div class="dg-lbl">Deposit (50%)</div><div class="dg-val">${b.deposit>0?'$'+b.deposit.toLocaleString()+' ✓':'Not collected'}</div></div>
+        <div class="dg-item"><div class="dg-lbl">Balance due</div><div class="dg-val">${b.status==='confirmed'||b.status==='active'?'$'+b.deposit.toLocaleString()+' · 30 days before':'—'}</div></div>
+        <div class="dg-item"><div class="dg-lbl">Payment status</div><div class="dg-val" style="color:${b.deposit>0?'var(--gr)':'var(--am)'}">${b.deposit>0?'Deposit received':'Awaiting deposit'}</div></div>
+      </div>
+      ${b.status==='inquiry'?`<button class="btn btn-ac btn-sm" style="margin-top:10px" onclick="sendPayLink('${b.id}')">💳 Send payment link via ${chIcon[b.ch]} ${b.ch.toUpperCase()}</button>`:''}
+    </div>
+
+    <div class="bd-section">
+      <div class="bd-lbl">AI conversation thread</div>
+      ${msgsHtml}
+    </div>
+
+    <div class="bd-section">
+      <div class="bd-lbl">Automated timeline</div>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot" style="background:var(--gr3);border:1px solid rgba(16,185,129,.3);color:var(--gr);font-size:12px">✓</div><div class="tl-content"><div class="tl-title">Inquiry received</div><div class="tl-sub">AI responded in &lt; 2 seconds</div><div class="tl-time">${b.created}</div></div></div>
+        ${b.status!=='inquiry'?`<div class="tl-item"><div class="tl-dot" style="background:var(--gr3);border:1px solid rgba(16,185,129,.3);color:var(--gr);font-size:12px">✓</div><div class="tl-content"><div class="tl-title">Deposit collected · Booking confirmed</div><div class="tl-sub">Stripe payment link · Auto-confirmation sent</div></div></div>`:''}
+        <div class="tl-item"><div class="tl-dot" style="background:var(--am2);border:1px solid rgba(245,158,11,.3);color:var(--am);font-size:12px">${b.status==='inquiry'?'…':'⏳'}</div><div class="tl-content"><div class="tl-title">Pre-arrival message</div><div class="tl-sub">Sent 48hrs before check-in via WhatsApp/SMS</div></div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--b2);color:var(--t3);font-size:12px">○</div><div class="tl-content"><div class="tl-title">Check-in instructions</div><div class="tl-sub">Door code + WiFi sent 24hrs before arrival</div></div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--b2);color:var(--t3);font-size:12px">○</div><div class="tl-content"><div class="tl-title">Post-stay review request</div><div class="tl-sub">Sent 2 hrs after check-out</div></div></div>
+      </div>
+    </div>`;
+}
+
+function confirmBook(id){
+  const b=bookings.find(x=>x.id===id);if(!b)return;
+  b.status='confirmed';b.deposit=b.total*0.5;
+  openBook(id);renderBookList();
+}
+function sendPayLink(id){alert('💳 Payment link sent via '+bookings.find(x=>x.id===id)?.ch.toUpperCase()+'!');}
+function filterBook(f,el){document.querySelectorAll('.book-list-top .btn').forEach(b=>b.classList.remove('on'));el.classList.add('on');renderBookList(f);}
+
+// ══ AUTOMATION FLOWS ══
+const flows=[
+  {id:'booking-confirm',name:'Booking confirmation',icon:'✅',status:'active',trigger:'Deposit received',channels:['wa','sms','email'],sends:142,
+   nodes:[
+     {type:'trigger',title:'Deposit received via Stripe',desc:'Fires when Stripe webhook confirms payment',tag:'trigger'},
+     {type:'action',title:'Send confirmation message',desc:'Hi {guest_name}! 🎉 Your booking at {property_name} is confirmed! Check-in: {checkin_date} at 3PM. Confirmation #{booking_id}. We\'ll send check-in instructions 24hrs before arrival!',tag:'action',ch:['wa','sms']},
+     {type:'action',title:'Send confirmation email',desc:'Full booking details with invoice attachment and what to expect.',tag:'action',ch:['email']},
+     {type:'action',title:'Create guest record in CRM',desc:'Log guest data, booking value, and channel source.',tag:'action'}
+   ]},
+  {id:'pre-arrival',name:'Pre-arrival sequence',icon:'🏖️',status:'active',trigger:'48hrs before check-in',channels:['wa','sms'],sends:98,
+   nodes:[
+     {type:'trigger',title:'48 hours before check-in',desc:'Scheduled trigger based on check-in date',tag:'trigger'},
+     {type:'action',title:'Send welcome message',desc:'Hi {guest_name}! Your stay at {property_name} is in 2 days! 🏖️ We\'re so excited to have you. Reply anytime with questions.',tag:'action',ch:['wa']},
+     {type:'delay',title:'Wait 24 hours',desc:'Send check-in details closer to arrival',tag:'delay'},
+     {type:'action',title:'Send check-in instructions',desc:'Door code: {door_code} · WiFi: {wifi_name} / {wifi_pass} · Check-in at 3PM. Need anything? I\'m here 24/7! 🔑',tag:'action',ch:['sms','wa']}
+   ]},
+  {id:'post-stay',name:'Post-stay & review',icon:'⭐',status:'active',trigger:'2hrs after checkout',channels:['wa','email'],sends:86,
+   nodes:[
+     {type:'trigger',title:'2 hours after check-out time',desc:'Fires at 1:00 PM on the day of checkout',tag:'trigger'},
+     {type:'action',title:'Thank you message',desc:'Hi {guest_name}! 🌟 Thank you so much for staying at {property_name}! We hope it was amazing. Would you mind leaving us a quick review? {review_link}',tag:'action',ch:['wa']},
+     {type:'delay',title:'Wait 3 days',desc:'Give guest time before follow-up',tag:'delay'},
+     {type:'condition',title:'Did guest leave a review?',desc:'Check review platforms. If yes → loyalty offer. If no → gentle follow-up.',tag:'condition'},
+     {type:'action',title:'Send loyalty discount',desc:'As a returning guest you get 10% off your next stay! Code: LOYAL10 · Valid 30 days. {booking_link}',tag:'action',ch:['sms']}
+   ]},
+  {id:'upsell',name:'Upsell & upgrade',icon:'💎',status:'active',trigger:'3 days before check-in',channels:['wa'],sends:54,
+   nodes:[
+     {type:'trigger',title:'3 days before check-in',desc:'Window for upgrades and add-ons',tag:'trigger'},
+     {type:'action',title:'Offer early check-in',desc:'Hi {guest_name}! Your stay is in 3 days 🎉 Would you like early check-in at 1PM for just $50? Also available: beach gear rental, airport transfer, or BBQ setup. Reply to add any extras!',tag:'action',ch:['wa']}
+   ]},
+  {id:'re-engage',name:'Re-engagement',icon:'🔄',status:'paused',trigger:'90 days since last stay',channels:['sms','email'],sends:32,
+   nodes:[
+     {type:'trigger',title:'90 days since last checkout',desc:'Targets past guests who haven\'t rebooked',tag:'trigger'},
+     {type:'action',title:'Send re-engagement offer',desc:'Hi {guest_name}! We miss you! 🏖️ Your exclusive returning guest rate: 10% off any villa this season. Code: WELCOME-BACK. Book at {booking_link}',tag:'action',ch:['sms']}
+   ]},
+  {id:'escalation',name:'Escalation handler',icon:'🚨',status:'active',trigger:'Negative sentiment detected',channels:['wa','sms','wc'],sends:8,
+   nodes:[
+     {type:'trigger',title:'AI detects negative sentiment / escalation keyword',desc:'Triggered by: complaint, maintenance emergency, legal threat, refund request',tag:'trigger'},
+     {type:'action',title:'AI sends empathy message + handoff notice',desc:'I\'m so sorry to hear this. I\'m connecting you with our guest relations manager right now — someone will reach out within 15 minutes. 🙏',tag:'action',ch:['wa','sms']},
+     {type:'action',title:'Notify guest relations team',desc:'WhatsApp + email alert sent immediately with full conversation context and guest data.',tag:'action'},
+     {type:'condition',title:'Resolved within 30 minutes?',desc:'If yes → send follow-up. If no → escalate to property manager.',tag:'condition'}
+   ]},
+];
+
+let activeFlowId=null;
+
+function renderFlowList(){
+  const el=document.getElementById('flow-list');
+  el.innerHTML=flows.map(f=>`
+    <div class="flow-item${f.id===activeFlowId?' on':''}" onclick="openFlow('${f.id}')">
+      <div class="fi-top"><span style="font-size:13px">${f.icon}</span><span class="fi-name">${f.name}</span>
+      <span class="badge ${f.status==='active'?'b-gr':'b-am'}" style="font-size:10px;margin-left:auto">${f.status}</span></div>
+      <div class="fi-sub">${f.trigger} · ${f.sends} sent</div>
+    </div>`).join('');
+}
+
+const tagStyle={trigger:'fn-trigger',action:'fn-action',condition:'fn-condition',delay:'fn-delay'};
+const tagLabel={trigger:'⚡ Trigger',action:'📤 Action',condition:'🔀 Condition',delay:'⏱ Delay'};
+const chColors2={wa:'#25D366',sms:'#30D158',email:'#6366F1'};
+const chIcon2={wa:'💬',sms:'📱',email:'📧'};
+
+function openFlow(id){
+  activeFlowId=id;
+  renderFlowList();
+  const f=flows.find(x=>x.id===id);
+  const el=document.getElementById('flow-detail');
+  const nodeHtml=f.nodes.map((n,i)=>`
+    ${i>0?'<div class="fn-arrow">↓</div>':''}
+    <div class="flow-node">
+      <div class="fn-type"><span class="fn-tag ${tagStyle[n.tag]}">${tagLabel[n.tag]}</span></div>
+      <div class="fn-title">${n.title}</div>
+      <div class="fn-edit-area" contenteditable="true">${n.desc}</div>
+      <div class="fn-meta">
+        ${n.ch?n.ch.map(c=>`<span class="badge" style="background:${chColors2[c]}18;color:${chColors2[c]};border:1px solid ${chColors2[c]}33;font-size:10px">${chIcon2[c]} ${c.toUpperCase()}</span>`).join(''):''}
+      </div>
+    </div>`).join('');
+
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:4px">${f.icon} ${f.name}</div>
+        <div style="display:flex;gap:7px;align-items:center">
+          <span class="badge ${f.status==='active'?'b-gr':'b-am'}">${f.status}</span>
+          <span style="font-size:11px;color:var(--t2)">Trigger: ${f.trigger}</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-ghost btn-sm">▶ Test flow</button>
+        <button class="btn btn-${f.status==='active'?'rd':'gr'} btn-sm" onclick="toggleFlow('${f.id}',this)">${f.status==='active'?'⏸ Pause':'▶ Activate'}</button>
+        <button class="btn btn-ac btn-sm" onclick="saveFlow('${f.id}',this)">💾 Save changes</button>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-mini"><div class="sm-val" style="color:var(--gr)">${f.sends}</div><div class="sm-lbl">Messages sent</div></div>
+      <div class="stat-mini"><div class="sm-val" style="color:var(--ac)">—</div><div class="sm-lbl">Open rate</div></div>
+      <div class="stat-mini"><div class="sm-val" style="color:var(--am)">${f.channels.length}</div><div class="sm-lbl">Active channels</div></div>
+    </div>
+    <div style="font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Flow steps — click any message to edit</div>
+    ${nodeHtml}
+    <div style="height:20px"></div>`;
+}
+
+function toggleFlow(id,btn){
+  const f=flows.find(x=>x.id===id);if(!f)return;
+  f.status=f.status==='active'?'paused':'active';
+  btn.textContent=f.status==='active'?'⏸ Pause':'▶ Activate';
+  btn.className='btn btn-'+(f.status==='active'?'rd':'gr')+' btn-sm';
+  renderFlowList();
+}
+function saveFlow(id,btn){btn.textContent='✓ Saved!';setTimeout(()=>btn.textContent='💾 Save changes',2000);}
+
+// ══ VOICE / CALL LOG ══
+const calls=[
+  {id:'c1',guest:'Unknown caller',emoji:'📞',num:'+1 786 555 0190',dur:'2:14',outcome:'Booking inquiry',time:'Today 15:08',resolved:true,
+   transcript:[
+     {spk:'Guest',txt:'Hi, I was wondering if you have availability for Villa Azul next weekend?',ts:'0:04'},
+     {spk:'Maya',txt:'Hi there! Welcome to Azure Villas, I\'m Maya your AI concierge. Villa Azul is our 4-bedroom beachfront property at $699 per night. For next weekend, July 12–14, it is available! That would be 2 nights totaling $1,398. Would you like me to send a booking link to your phone?',ts:'0:07'},
+     {spk:'Guest',txt:'Yes, that sounds great. Can you send it to this number?',ts:'0:38'},
+     {spk:'Maya',txt:'Absolutely! I\'m sending the secure payment link to this number right now. Once your 50% deposit is confirmed, your booking is locked in. Is there anything else you\'d like to know about the property?',ts:'0:42'},
+     {spk:'Guest',txt:'How far is it from the beach?',ts:'1:18'},
+     {spk:'Maya',txt:'Villa Azul is literally beachfront — you can step off the back patio directly onto the sand. It\'s one of our most popular properties for that reason! The pool is also ocean-facing.',ts:'1:21'},
+     {spk:'Guest',txt:'Perfect. I\'ll check that link. Thank you!',ts:'1:55'},
+     {spk:'Maya',txt:'Wonderful! Enjoy your stay and don\'t hesitate to call back anytime. We\'re available 24/7. Goodbye!',ts:'1:58'}
+   ]},
+  {id:'c2',guest:'James Rodriguez',emoji:'👨',num:'+1 305 555 0244',dur:'1:02',outcome:'Check-in question',time:'Today 11:22',resolved:true,
+   transcript:[
+     {spk:'Guest',txt:'Hey, checking in about my reservation at Palm Suite.',ts:'0:03'},
+     {spk:'Maya',txt:'Hi James! I can see your reservation at Palm Suite, July 12–15. Check-in is at 3PM. Is there anything specific you needed?',ts:'0:06'},
+     {spk:'Guest',txt:'Yeah I wanted to ask about early check-in.',ts:'0:22'},
+     {spk:'Maya',txt:'Early check-in is available for a $50 fee subject to availability. I\'ll flag your reservation for the team to confirm. You\'ll get a message by the evening of July 11th. Sound good?',ts:'0:26'},
+     {spk:'Guest',txt:'Perfect, thanks.',ts:'0:54'}
+   ]},
+  {id:'c3',guest:'Unknown caller',emoji:'📞',num:'+1 954 555 0381',dur:'0:38',outcome:'FAQ — pool hours',time:'Yesterday 22:47',resolved:true,
+   transcript:[
+     {spk:'Guest',txt:'What are the pool hours?',ts:'0:03'},
+     {spk:'Maya',txt:'Our pool hours are 7 AM to 10 PM daily. Is there anything else I can help you with?',ts:'0:05'},
+     {spk:'Guest',txt:'No that\'s all, thanks.',ts:'0:32'}
+   ]},
+  {id:'c4',guest:'Lisa Park',emoji:'👩‍💼',num:'+1 786 555 0520',dur:'4:11',outcome:'Escalated — maintenance',time:'Yesterday 13:08',resolved:false,
+   transcript:[
+     {spk:'Guest',txt:'The air conditioning is completely broken. It\'s 85 degrees and we have children.',ts:'0:05'},
+     {spk:'Maya',txt:'Oh no, I\'m so sorry Lisa. That\'s absolutely unacceptable, especially with children. I\'m escalating this to our maintenance team as an emergency right now. A technician will be dispatched to Villa Azul within the hour.',ts:'0:09'},
+     {spk:'Guest',txt:'This is really unacceptable. We paid a lot of money for this.',ts:'0:52'},
+     {spk:'Maya',txt:'You\'re completely right, and I sincerely apologize. I\'m also alerting our guest relations manager right now. Maria will contact you directly within 10 minutes. We will make this right.',ts:'0:57'},
+     {spk:'Guest',txt:'Okay. Please hurry.',ts:'1:42'}
+   ]}
+];
+
+let activeCallId=null;
+function renderCallList(){
+  const el=document.getElementById('call-list');
+  el.innerHTML=calls.map(c=>`
+    <div class="call-item${c.id===activeCallId?' on':''}" onclick="openCall('${c.id}')">
+      <div class="ci-row"><span class="ci-name">${c.emoji} ${c.guest}</span><span class="ci-dur">⏱ ${c.dur}</span></div>
+      <div class="ci-outcome">${c.outcome}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span class="ci-time">${c.time}</span>
+        <span class="badge ${c.resolved?'b-gr':'b-rd'}" style="font-size:10px">${c.resolved?'Resolved':'Escalated'}</span>
+      </div>
+    </div>`).join('');
+}
+
+function openCall(id){
+  activeCallId=id;
+  renderCallList();
+  const c=calls.find(x=>x.id===id);
+  const el=document.getElementById('call-detail');
+  const bars=Array.from({length:28},(_,i)=>{const h=10+Math.sin(i*.6)*8+Math.random()*14;return`<div class="wf-bar" style="height:${h}px;opacity:${0.4+Math.random()*.6}"></div>`;}).join('');
+  const trHtml=c.transcript.map(l=>`
+    <div class="tr-line">
+      <span class="tr-spk ${l.spk==='Guest'?'tr-guest':'tr-ai'}">${l.spk==='Guest'?'👤 Guest':'🤖 Maya'}</span>
+      <span class="tr-txt">${l.txt}</span>
+      <span class="tr-ts">${l.ts}</span>
+    </div>`).join('');
+
+  el.innerHTML=`
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px">
+      <div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:4px">${c.emoji} ${c.guest} <span style="font-size:13px;font-weight:400;color:var(--t2)">${c.num}</span></div>
+        <div style="display:flex;gap:7px;align-items:center">
+          <span class="badge ${c.resolved?'b-gr':'b-rd'}">${c.resolved?'✓ Resolved':'⚠️ Escalated'}</span>
+          <span class="badge b-am">📞 ${c.dur}</span>
+          <span style="font-size:11px;color:var(--t2)">${c.time}</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-ghost btn-sm">📋 Add to CRM</button>
+        <button class="btn btn-ghost btn-sm">📧 Follow up</button>
+      </div>
+    </div>
+    <div class="vapi-setup">
+      <div style="font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Call waveform</div>
+      <div class="waveform">${bars}</div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:4px"><span>0:00</span><span>${c.dur}</span></div>
+    </div>
+    <div class="transcript">
+      <div class="tr-hdr">🤖 AI transcript <span class="badge b-ac" style="font-size:10px">Auto-generated · VAPI</span></div>
+      <div class="tr-body">${trHtml}</div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:12px 14px">
+      <div style="font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">AI call summary</div>
+      <div style="font-size:12.5px;color:var(--t4);line-height:1.6"><strong style="color:var(--t)">Outcome:</strong> ${c.outcome}<br><strong style="color:var(--t)">Resolved:</strong> ${c.resolved?'Yes — fully handled by AI':'No — escalated to guest relations'}<br><strong style="color:var(--t)">Duration:</strong> ${c.dur}<br><strong style="color:var(--t)">Sentiment:</strong> ${c.resolved?'Positive / Neutral':'Negative → escalated'}</div>
+    </div>`;
+}
+
+// ── INIT ──
+renderBookList();
+renderFlowList();
+renderCallList();
+</script>
+</html>
